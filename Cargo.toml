@@ -1,0 +1,9 @@
+[package]
+name = "lab3_rust"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+fs = "0.0.5"
+io = "0.0.2"
+minifb = "0.27.0"

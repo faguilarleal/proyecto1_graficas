@@ -22,15 +22,5 @@ impl Color {
         self.blue
     }
 
-    pub fn set_red(&mut self, red: u8) {
-        self.red = red;
-    }
-
-    pub fn set_green(&mut self, green: u8) {
-        self.green = green;
-    }
-
-    pub fn set_blue(&mut self, blue: u8) {
-        self.blue = blue;
-    }
+    
 }

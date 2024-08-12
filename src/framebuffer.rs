@@ -2,8 +2,8 @@ use crate::bm::write_bmp_file;
 use crate::color::Color;
 
 pub struct Framebuffer {
-    width: usize,
-    height: usize,
+    pub width: usize,
+    pub height: usize,
     pub buffer: Vec<u32>,
     background_color: u32,
     current_color: u32,
@@ -18,14 +18,12 @@ impl Framebuffer {
             width,
             height,
             buffer,
-            background_color: 0x000000, // Color de fondo predeterminado (negro)
-            current_color: 0xFFFFFF, // Color de dibujo predeterminado (blanco)
+            background_color: 0xFFFFFF, // Color de fondo predeterminado (negro)
+            current_color: 0x000000, // Color de dibujo predeterminado (blanco)
             line_color: 0xFFFFFF, // Color de línea predeterminado (blanco)
           
         }
     }
-
- 
 
   
     pub fn width(&self) -> usize {

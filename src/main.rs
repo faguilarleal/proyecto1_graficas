@@ -67,7 +67,7 @@ fn render2D(framebuffer: &mut Framebuffer, player: &Player) {
 
     render_player2d(framebuffer, player, 5);
 
-    let num_rayos = 50; 
+    let num_rayos = 5; 
     for i in 0..num_rayos{ 
         let current_ray = i as f32 / num_rayos as f32; 
         let a = player.a - (player.fov / 2.0) + (player.fov * current_ray); 
@@ -93,10 +93,10 @@ fn render3D(framebuffer: &mut Framebuffer, player: &Player){
         let stake_bottom = (hh + (stake_heigth / 2.0 )) as usize;
 
         for y in stake_top..stake_bottom{
-            let ty = (y as f32 - stake_top as f32 ) / (stake_bottom as f32  - stake_top as f32 ) * 128.0;
-            let tx = intersect.tx;
-            let color = cell_to_texture_color(intersect.impact, tx as u32, ty as u32);
-            framebuffer.point(i,y,0xff0ff0);
+            // let ty = (y as f32 - stake_top as f32 ) / (stake_bottom as f32  - stake_top as f32 ) * 128.0;
+            // let tx = intersect.tx;
+            // let color = cell_to_texture_color(intersect.impact, tx as u32, ty as u32);
+            framebuffer.point(i,y,0x0f00ff);
         }
     }
 
@@ -109,7 +109,7 @@ fn main() {
     let framebuffer_width = 1300;
     let framebuffer_height = 900;
 
-    let frame_delay = Duration::from_millis(5);
+    let frame_delay = Duration::from_millis(1);
 
     let mut framebuffer = framebuffer::Framebuffer::new(framebuffer_width, framebuffer_height);
     let mut window = Window::new(

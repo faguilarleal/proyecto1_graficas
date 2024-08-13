@@ -17,8 +17,6 @@ pub fn cast_ray(
     draw_line: bool, 
 ) -> Intersect { 
     let mut d = 0.0;
-
-
     loop{ 
         let cos = d* a.cos();
         let sin = d* a.sin();

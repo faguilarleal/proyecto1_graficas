@@ -28,8 +28,6 @@ fn cell_to_texture_color(cell: char, tx: u32, ty:u32)-> u32{
     
 }
 
-
-
 // recibe donde va a estar, el tamaño de los cuadrados y para ponerle diferentes colores una celda
 fn drawcell(framebuffer: &mut Framebuffer, xo: usize, yo: usize, block_size: usize, cell: char){
     for x in xo..xo + block_size{
@@ -93,10 +91,10 @@ fn render3D(framebuffer: &mut Framebuffer, player: &Player){
         let stake_bottom = (hh + (stake_heigth / 2.0 )) as usize;
 
         for y in stake_top..stake_bottom{
-            // let ty = (y as f32 - stake_top as f32 ) / (stake_bottom as f32  - stake_top as f32 ) * 128.0;
-            // let tx = intersect.tx;
-            // let color = cell_to_texture_color(intersect.impact, tx as u32, ty as u32);
-            framebuffer.point(i,y,0x0f00ff);
+            let ty = (y as f32 - stake_top as f32 ) / (stake_bottom as f32  - stake_top as f32 ) * 128.0;
+            let tx = intersect.tx;
+            let color = cell_to_texture_color(intersect.impact, tx as u32, ty as u32);
+            framebuffer.point(i,y,color);
         }
     }
 

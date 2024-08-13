@@ -8,7 +8,11 @@ fs = "0.0.5"
 image = "0.25.2"
 io = "0.0.2"
 minifb = "0.27.0"
+miniquad = "0.4.5"
+mouse_position = "0.1.4"
 nalgebra-glm = "0.3"
 once_cell = "1.10"
+winapi = { version = "0.3", features = ["winuser"] }
+
 
 

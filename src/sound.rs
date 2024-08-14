@@ -6,6 +6,7 @@ use std::sync::{Arc, Mutex};
 pub struct AudioPlayer {
     sink: Arc<Mutex<Sink>>,
     _stream: OutputStream,
+    pub isplaying:bool,
 }
 
 impl AudioPlayer {
@@ -21,14 +22,20 @@ impl AudioPlayer {
         AudioPlayer {
             sink: Arc::new(Mutex::new(sink)),
             _stream: stream,
+            isplaying: true,
         }
     }
 
-    pub fn play(&self) {
+    pub fn play(&mut self) {
         self.sink.lock().unwrap().play();
+        self.isplaying = true;
     }
 
-    pub fn stop(&self) {
+    pub fn stop(&mut self) {
         self.sink.lock().unwrap().stop();
+        self.isplaying = false;
+
     }
+
+    
 }

@@ -31,9 +31,7 @@ use rodio::{Decoder, OutputStream, source::Source};
 
 fn main() {
     let maze = load_maze("./archivo.txt");
-    let audio_file_path = "./assets/songs.mp3"; 
-    let audio_player = AudioPlayer::new(audio_file_path); 
-
+    
     let window_width = 1300;
     let window_height = 900;
 
@@ -61,11 +59,12 @@ fn main() {
     
     let mut last_time = Instant::now();
     let mut frame_count = 0;
+    
+    let audio_file_path = "./assets/songs.mp3"; 
+    let mut audio_player = AudioPlayer::new(audio_file_path); 
 
- 
-   
     while window.is_open() {
-
+     
         let current_time = Instant::now();
         let duration = current_time.duration_since(last_time);
 
@@ -88,6 +87,9 @@ fn main() {
         }
         else{
              // Incrementar el contador de frames
+            if !audio_player.isplaying {
+                audio_player = AudioPlayer::new(audio_file_path);
+            }
             audio_player.play();
             render3D(&mut framebuffer, &mut player1);
              

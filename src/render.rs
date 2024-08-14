@@ -11,7 +11,7 @@ use once_cell::sync::Lazy;
 
 
 
-static WALL1: Lazy<Arc<Texture>> = Lazy::new(|| Arc::new(Texture::new("./assets/wall1.jpg")));
+static WALL1: Lazy<Arc<Texture>> = Lazy::new(|| Arc::new(Texture::new("./assets/img1.jpg")));
 
 
 fn cell_to_texture_color(cell: char, tx: u32, ty:u32)-> u32{
@@ -46,7 +46,7 @@ fn render_player2d(framebuffer: &mut Framebuffer, player: &Player, block_size: u
 
 pub fn render2D(framebuffer: &mut Framebuffer, player: &Player) {
     let maze = load_maze("./archivo.txt");
-    let block_size = 100;
+    let block_size = 50;
 
     // for de dos dimensiones
     for row in 0..maze.len(){
@@ -68,7 +68,7 @@ pub fn render2D(framebuffer: &mut Framebuffer, player: &Player) {
 pub fn render3D(framebuffer: &mut Framebuffer, player: &Player){
     let maze = load_maze("./archivo.txt");
     let num_rayos = framebuffer.width; 
-    let block_size = 100; 
+    let block_size = 50; 
 
     let hh = framebuffer.height as f32/ 2.0;
 
@@ -82,14 +82,26 @@ pub fn render3D(framebuffer: &mut Framebuffer, player: &Player){
         let stake_top = (hh - (stake_heigth / 2.0 )) as usize;
         let stake_bottom = (hh + (stake_heigth / 2.0 )) as usize;
 
-        if stake_top < framebuffer.height && stake_bottom < framebuffer.height {
+        if stake_top <= framebuffer.height && stake_bottom <= framebuffer.height {
             for y in stake_top..stake_bottom{
                 let ty = (y as f32 - stake_top as f32 ) / (stake_bottom as f32  - stake_top as f32 ) * 128.0;
                 let tx = intersect.tx;
                 let color = cell_to_texture_color(intersect.impact, tx as u32, ty as u32);
                 framebuffer.point(i,y,color);
             }
+            for y in (stake_bottom as usize)..(framebuffer.height as usize){
+                framebuffer.point(i,y as usize,0x165590);
+            }
+            for y in 0..(stake_top as usize){
+                framebuffer.point(i,y as usize,0x273a28);
+            }
+        }else{
+            for y in stake_top..stake_bottom{
+                framebuffer.point(i,y,0x0c160c);
+            }
         }
+
+        
     }
 
 }

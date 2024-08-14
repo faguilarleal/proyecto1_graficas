@@ -11,96 +11,29 @@ mod maze;
 mod player; 
 mod caster; 
 mod texture; 
+mod sound;
+mod render; 
 
+use render::{render2D, render3D};
+
+use sound::AudioPlayer;
 use std::time::{Duration, Instant};
 use framebuffer::Framebuffer;
 use player::{procces, Player};
 use maze::load_maze;
 use caster::{cast_ray, Intersect};
 use texture::Texture; 
+use std::fs::File;
+use std::io::BufReader;
+use rodio::{Decoder, OutputStream, source::Source};
 
-static WALL1: Lazy<Arc<Texture>> = Lazy::new(|| Arc::new(Texture::new("./assets/wall1.jpg")));
 
-
-fn cell_to_texture_color(cell: char, tx: u32, ty:u32)-> u32{
-    let default_color = 0x000000;
-    return WALL1.get_pixel_color(tx,ty)
-    
-}
-
-// recibe donde va a estar, el tamaño de los cuadrados y para ponerle diferentes colores una celda
-fn drawcell(framebuffer: &mut Framebuffer, xo: usize, yo: usize, block_size: usize, cell: char){
-    for x in xo..xo + block_size{
-        for y in yo..yo + block_size{
-            if cell != ' '{    
-                framebuffer.point(x,y,0x000000);
-            }
-        }
-    }
-
-}
-
-fn render_player2d(framebuffer: &mut Framebuffer, player: &Player, block_size: usize) {
-    let player_size = block_size ; // Tamaño del jugador (puede ser ajustado)
-    let player_x = player.pos.x as usize;
-    let player_y = player.pos.y as usize;
-
-    for y in player_y..(player_y + player_size) {
-        for x in player_x..(player_x + player_size) {
-            framebuffer.point(x, y, 0xFFFFA500);
-        }
-    }
-}
-
-fn render2D(framebuffer: &mut Framebuffer, player: &Player) {
-    let maze = load_maze("./archivo.txt");
-    let block_size = 100;
-
-    // for de dos dimensiones
-    for row in 0..maze.len(){
-        for col in 0..maze[row].len(){
-            drawcell(framebuffer, col * block_size,row * block_size , block_size, maze[row][col]);
-        }
-    }
-
-    render_player2d(framebuffer, player, 5);
-
-    let num_rayos = 5; 
-    for i in 0..num_rayos{ 
-        let current_ray = i as f32 / num_rayos as f32; 
-        let a = player.a - (player.fov / 2.0) + (player.fov * current_ray); 
-        cast_ray(framebuffer, &maze, player, a, block_size, true);
-    }
-}
-
-fn render3D(framebuffer: &mut Framebuffer, player: &Player){
-    let maze = load_maze("./archivo.txt");
-    let num_rayos = framebuffer.width; 
-    let block_size = 100; 
-
-    let hh = framebuffer.height as f32/ 2.0;
-
-    for i in 0..num_rayos{ 
-        let current_ray = i as f32 / num_rayos as f32; 
-        let a = player.a - (player.fov / 2.0) + (player.fov * current_ray); 
-        let intersect = cast_ray(framebuffer, &maze, player, a, block_size, false);
-
-        let stake_heigth = (framebuffer.height as f32 / intersect.distance) * 60.0; 
-
-        let stake_top = (hh - (stake_heigth / 2.0 )) as usize;
-        let stake_bottom = (hh + (stake_heigth / 2.0 )) as usize;
-
-        for y in stake_top..stake_bottom{
-            let ty = (y as f32 - stake_top as f32 ) / (stake_bottom as f32  - stake_top as f32 ) * 128.0;
-            let tx = intersect.tx;
-            let color = cell_to_texture_color(intersect.impact, tx as u32, ty as u32);
-            framebuffer.point(i,y,color);
-        }
-    }
-
-}
 
 fn main() {
+    let maze = load_maze("./archivo.txt");
+    let audio_file_path = "./assets/songs.mp3"; 
+    let audio_player = AudioPlayer::new(audio_file_path); 
+
     let window_width = 1300;
     let window_height = 900;
 
@@ -121,14 +54,16 @@ fn main() {
         pos: Vec2::new(100.0, 100.0),
         a: PI/3.0,
         fov: PI/3.0, 
+        prev_mouse_x: None, 
     };
 
-    let mut mode = "2D";
+    let mut mode = "3D";
     
     let mut last_time = Instant::now();
     let mut frame_count = 0;
 
-
+ 
+   
     while window.is_open() {
 
         let current_time = Instant::now();
@@ -141,18 +76,20 @@ fn main() {
         if window.is_key_down(Key::M){
             mode = if mode == "2D" {"3D"} else {"2D"};
         }
-        procces(&mut window, &mut player1); // para los controles y movimiento 
 
-       
+        procces(&mut window, &mut player1, &maze , 100); // para los controles y movimiento 
+
 
         framebuffer.clear();
 
         if mode == "2D"{
+            audio_player.stop();
             render2D(&mut framebuffer, &mut player1);
         }
         else{
              // Incrementar el contador de frames
-             render3D(&mut framebuffer, &mut player1);
+            audio_player.play();
+            render3D(&mut framebuffer, &mut player1);
              
         }
             
@@ -162,6 +99,7 @@ fn main() {
         if duration >= Duration::from_secs(1) {
             let fps = frame_count as f64 / duration.as_secs_f64();
             println!("FPS: {}", fps);
+            println!("{}", mode);
             frame_count = 0;
             last_time = Instant::now();
         }

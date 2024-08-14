@@ -46,7 +46,7 @@ fn render_player2d(framebuffer: &mut Framebuffer, player: &Player, block_size: u
 
 pub fn render2D(framebuffer: &mut Framebuffer, player: &Player) {
     let maze = load_maze("./archivo.txt");
-    let block_size = 50;
+    let block_size = 100;
 
     // for de dos dimensiones
     for row in 0..maze.len(){
@@ -68,7 +68,7 @@ pub fn render2D(framebuffer: &mut Framebuffer, player: &Player) {
 pub fn render3D(framebuffer: &mut Framebuffer, player: &Player){
     let maze = load_maze("./archivo.txt");
     let num_rayos = framebuffer.width; 
-    let block_size = 50; 
+    let block_size = 100; 
 
     let hh = framebuffer.height as f32/ 2.0;
 

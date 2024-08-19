@@ -9,15 +9,11 @@ use std::sync::Arc;
 use once_cell::sync::Lazy;
 
 
-
-
 static WALL1: Lazy<Arc<Texture>> = Lazy::new(|| Arc::new(Texture::new("./assets/img1.jpg")));
 
 
 fn cell_to_texture_color(cell: char, tx: u32, ty:u32)-> u32{
-    let default_color = 0x000000;
     return WALL1.get_pixel_color(tx,ty)
-    
 }
 
 // recibe donde va a estar, el tamaño de los cuadrados y para ponerle diferentes colores una celda
@@ -32,10 +28,10 @@ fn drawcell(framebuffer: &mut Framebuffer, xo: usize, yo: usize, block_size: usi
 
 }
 
-fn render_player2d(framebuffer: &mut Framebuffer, player: &Player, block_size: usize) {
-    let player_size = block_size ; // Tamaño del jugador (puede ser ajustado)
-    let player_x = player.pos.x as usize;
-    let player_y = player.pos.y as usize;
+fn render_player2d(framebuffer: &mut Framebuffer, player: &Player, block_size: usize, offset_x: usize, offset_y: usize) {
+    let player_size = block_size; // Tamaño del jugador (puede ser ajustado)
+    let player_x = (player.pos.x * block_size as f32) as usize + offset_x;
+    let player_y = (player.pos.y * block_size as f32) as usize + offset_y;
 
     for y in player_y..(player_y + player_size) {
         for x in player_x..(player_x + player_size) {
@@ -44,18 +40,18 @@ fn render_player2d(framebuffer: &mut Framebuffer, player: &Player, block_size: u
     }
 }
 
-pub fn render2D(framebuffer: &mut Framebuffer, player: &Player) {
+pub fn render2D(framebuffer: &mut Framebuffer, player: &Player, offset_x: usize, offset_y: usize) {
     let maze = load_maze("./archivo.txt");
-    let block_size = 100;
+    let block_size = 50;
 
     // for de dos dimensiones
     for row in 0..maze.len(){
         for col in 0..maze[row].len(){
-            drawcell(framebuffer, col * block_size,row * block_size , block_size, maze[row][col]);
+            drawcell(framebuffer, col * block_size + offset_x, row * block_size + offset_y, block_size, maze[row][col]);
         }
     }
 
-    render_player2d(framebuffer, player, 5);
+    render_player2d(framebuffer, player, 5, offset_x, offset_y);
 
     let num_rayos = 5; 
     for i in 0..num_rayos{ 
@@ -84,7 +80,7 @@ pub fn render3D(framebuffer: &mut Framebuffer, player: &Player){
 
         if stake_top <= framebuffer.height && stake_bottom <= framebuffer.height {
             for y in stake_top..stake_bottom{
-                let ty = (y as f32 - stake_top as f32 ) / (stake_bottom as f32  - stake_top as f32 ) * 128.0;
+                let ty = (y as f32 - stake_top as f32 ) / (stake_bottom as f32  - stake_top as f32 ) * 200.0;
                 let tx = intersect.tx;
                 let color = cell_to_texture_color(intersect.impact, tx as u32, ty as u32);
                 framebuffer.point(i,y,color);

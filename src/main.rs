@@ -60,8 +60,9 @@ fn main() {
     let mut last_time = Instant::now();
     let mut frame_count = 0;
     
-    let audio_file_path = "./assets/songs.mp3"; 
-    let mut audio_player = AudioPlayer::new(audio_file_path); 
+
+    // let audio_file_path = "./assets/songs.mp3"; 
+    // let mut audio_player = AudioPlayer::new(audio_file_path); 
 
     while window.is_open() {
      
@@ -76,23 +77,21 @@ fn main() {
             mode = if mode == "2D" {"3D"} else {"2D"};
         }
 
-        procces(&mut window, &mut player1, &maze , 100); // para los controles y movimiento 
-
-
         framebuffer.clear();
 
         if mode == "2D"{
-            audio_player.stop();
-            render2D(&mut framebuffer, &mut player1);
+            // audio_player.stop();
+            procces(&mut window, &mut player1, &maze , 100); // para los controles y movimiento 
+            render2D(&mut framebuffer, &mut player1, 0, 0);
         }
         else{
              // Incrementar el contador de frames
-            if !audio_player.isplaying {
-                audio_player = AudioPlayer::new(audio_file_path);
-            }
-            audio_player.play();
-            render3D(&mut framebuffer, &mut player1);
-             
+            // if !audio_player.isplaying {
+            //     audio_player = AudioPlayer::new(audio_file_path);
+            // }
+            // audio_player.play();
+            procces(&mut window, &mut player1, &maze , 100); // para los controles y movimiento 
+            render3D(&mut framebuffer, &mut player1);    
         }
             
         frame_count += 1;

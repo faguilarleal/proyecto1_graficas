@@ -10,6 +10,10 @@ pub struct Framebuffer {
     line_color: u32,
 }
 
+pub fn extract_color_component(color_value: u32, shift: u32) -> u8 {
+    ((color_value >> shift) & 0xFF) as u8
+}
+
 impl Framebuffer {
     pub fn new(width: usize, height: usize) -> Framebuffer {
         let buffer = vec![0; width * height];
@@ -40,10 +44,9 @@ impl Framebuffer {
 
     
     pub fn clear(&mut self) {
-        for pixel in self.buffer.iter_mut() {
-            *pixel = self.background_color;
-        }
+        self.buffer.fill(self.background_color);
     }
+    
 
     pub fn set_current_color(&mut self, color: u32) {
         self.current_color = color;
@@ -55,20 +58,25 @@ impl Framebuffer {
     
     pub fn point(&mut self, x: usize, y: usize, color: u32) {
         if x < self.width && y < self.height {
-            let inverted_y = self.height - 1 - y;
-            self.buffer[inverted_y * self.width + x] = color;
+            let index = (self.height - 1 - y) * self.width + x;
+            self.buffer[index] = color;
         }
     }
+    
 
+    
+    
     pub fn render_buffer(&self, file_path: &str) -> std::io::Result<()> {
         let buffer: Vec<Color> = self.buffer.iter()
             .map(|&color_value| {
-                let red = ((color_value >> 16) & 0xFF) as u8;
-                let green = ((color_value >> 8) & 0xFF) as u8;
-                let blue = (color_value & 0xFF) as u8;
-                Color::new(red, green, blue)
+                Color::new(
+                    extract_color_component(color_value, 16),
+                    extract_color_component(color_value, 8),
+                    extract_color_component(color_value, 0)
+                )
             })
             .collect();
         write_bmp_file(file_path, &buffer, self.width, self.height)
     }
+    
 }

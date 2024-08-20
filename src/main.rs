@@ -49,11 +49,13 @@ fn main() {
     ).unwrap();
 
     let mut player1 = Player{
-        pos: Vec2::new(100.0, 100.0),
+        pos: Vec2::new(150.0, 150.0),
         a: PI/3.0,
         fov: PI/3.0, 
         prev_mouse_x: None, 
     };
+
+
 
     let mut mode = "3D";
     
@@ -61,8 +63,8 @@ fn main() {
     let mut frame_count = 0;
     
 
-    // let audio_file_path = "./assets/songs.mp3"; 
-    // let mut audio_player = AudioPlayer::new(audio_file_path); 
+    let audio_file_path = "./assets/songs.mp3"; 
+    let mut audio_player = AudioPlayer::new(audio_file_path); 
 
     while window.is_open() {
      
@@ -80,20 +82,19 @@ fn main() {
         framebuffer.clear();
 
         if mode == "2D"{
-            // audio_player.stop();
+            audio_player.stop();
             procces(&mut window, &mut player1, &maze , 100); // para los controles y movimiento 
             render2D(&mut framebuffer, &mut player1, 0, 0);
         }
         else{
-             // Incrementar el contador de frames
-            // if !audio_player.isplaying {
-            //     audio_player = AudioPlayer::new(audio_file_path);
-            // }
-            // audio_player.play();
+            //  Incrementar el contador de frames
+            if !audio_player.isplaying {
+                audio_player = AudioPlayer::new(audio_file_path);
+            }
+            audio_player.play();
             procces(&mut window, &mut player1, &maze , 100); // para los controles y movimiento 
-            render3D(&mut framebuffer, &mut player1);    
+            render3D(&mut framebuffer, &mut player1);
         }
-            
         frame_count += 1;
         
         // Calcular y mostrar FPS cada segundo

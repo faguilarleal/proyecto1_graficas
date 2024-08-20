@@ -42,7 +42,7 @@ fn render_player2d(framebuffer: &mut Framebuffer, player: &Player, block_size: u
 
 pub fn render2D(framebuffer: &mut Framebuffer, player: &Player, offset_x: usize, offset_y: usize) {
     let maze = load_maze("./archivo.txt");
-    let block_size = 50;
+    let block_size = 100;
 
     // for de dos dimensiones
     for row in 0..maze.len(){

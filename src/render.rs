@@ -84,16 +84,16 @@ pub fn render3D(framebuffer: &mut Framebuffer, player: &Player){
 
         if stake_top <= framebuffer.height && stake_bottom <= framebuffer.height {
             for y in stake_top..stake_bottom{
-                let ty = (y as f32 - stake_top as f32 ) / (stake_bottom as f32  - stake_top as f32 ) * 128.0;
-                let tx = intersect.tx;
-                let color = cell_to_texture_color(intersect.impact, tx as u32, ty as u32);
-                framebuffer.point(i,y,color);
+                // let ty = (y as f32 - stake_top as f32 ) / (stake_bottom as f32  - stake_top as f32 ) * 128.0;
+                // let tx = intersect.tx;
+                // let color = cell_to_texture_color(intersect.impact, tx as u32, ty as u32);
+                framebuffer.point(i,y,0x000000);
             }
             for y in (stake_bottom as usize)..(framebuffer.height as usize){
-                framebuffer.point(i,y as usize,0x165590);
+                framebuffer.point(i,y as usize, 0x273a28);
             }
             for y in 0..(stake_top as usize){
-                framebuffer.point(i,y as usize,0x273a28);
+                framebuffer.point(i,y as usize,0x165590);
             }
         }else{
             for y in stake_top..stake_bottom{

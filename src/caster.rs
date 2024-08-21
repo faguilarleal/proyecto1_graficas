@@ -7,7 +7,6 @@ pub struct Intersect{
     pub impact: char,
     pub tx: usize,
 }
-
 pub fn cast_ray(
     framebuffer: &mut Framebuffer, 
     maze: &Vec<Vec<char>>, 
@@ -17,9 +16,12 @@ pub fn cast_ray(
     draw_line: bool, 
 ) -> Intersect { 
     let mut d = 0.0;
-    loop{ 
-        let cos = d* a.cos();
-        let sin = d* a.sin();
+    let cos_a = a.cos();
+    let sin_a = a.sin();
+
+    loop { 
+        let cos = d * cos_a;
+        let sin = d * sin_a;
 
         let x = (player.pos.x + cos) as usize; 
         let y = (player.pos.y + sin) as usize;
@@ -27,26 +29,22 @@ pub fn cast_ray(
         let i = x / block_size; 
         let j = y / block_size; 
         
-        let hitx = x - i * block_size; 
-        let hity = y - j * block_size; 
+        let hitx = x % block_size; 
+        let hity = y % block_size; 
 
-        let mut maxhit  = hity; 
-        if 1 < hitx && hitx < block_size -1{
-            maxhit = hitx; 
-        }
-        
-        if draw_line{
+        let maxhit = hitx.max(hity); // Determina el mayor valor entre hitx y hity
+
+        if draw_line {
             framebuffer.point(x, y, 0x000000);
         }
 
         if maze[j][i] != ' ' {
-            return Intersect{
-                distance:d, 
+            return Intersect {
+                distance: d, 
                 impact: maze[j][i],
                 tx: maxhit,
             }
         }
-
 
         d += 0.8; 
     }

@@ -10,6 +10,7 @@ pub struct Player{
     pub a: f32, // angle of view
     pub fov: f32, // field of view
     pub prev_mouse_x: Option<f32>,
+    pub minimapa: bool, 
 }
 
 
@@ -42,27 +43,30 @@ impl Player {
 
 
 pub fn procces(window: &Window, player: &mut Player, maze: &Vec<Vec<char>>, block_size: usize) {
-    const MOVE_SPEED: f32 = 15.0;
-    const ROTATION_SPEED: f32 = PI/ 30.0;
 
-
-    if window.is_key_down(Key::Up) {
-        let dir = Vec2::new(player.a.cos() * MOVE_SPEED, player.a.sin() * MOVE_SPEED);
-        player.move_player(dir, maze, block_size);
-    }
-
-    if window.is_key_down(Key::Left) {
-        player.a -= ROTATION_SPEED;
-    }
-
-    if window.is_key_down(Key::Down) {
-        let dir = Vec2::new(-player.a.cos() * MOVE_SPEED, -player.a.sin() * MOVE_SPEED);
-        player.move_player(dir, maze, block_size);
-    }
-
-    if window.is_key_down(Key::Right) {
-        player.a += ROTATION_SPEED;
-    }
-
-    player.rotate_with_mouse(window); // Rotar con el mouse
+    
+        // else{
+        const MOVE_SPEED: f32 = 15.0;
+        const ROTATION_SPEED: f32 = PI/ 30.0;
+        
+        if window.is_key_down(Key::Up) {
+            let dir = Vec2::new(player.a.cos() * MOVE_SPEED, player.a.sin() * MOVE_SPEED);
+            player.move_player(dir, maze, block_size);
+        }
+        
+        if window.is_key_down(Key::Left) {
+            player.a -= ROTATION_SPEED;
+        }
+        
+        if window.is_key_down(Key::Down) {
+            let dir = Vec2::new(-player.a.cos() * MOVE_SPEED, -player.a.sin() * MOVE_SPEED);
+            player.move_player(dir, maze, block_size);
+        }
+        
+        if window.is_key_down(Key::Right) {
+            player.a += ROTATION_SPEED;
+        }
+        
+        // player.rotate_with_mouse(window); // Rotar con el mouse
+    // } 
 }

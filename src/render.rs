@@ -20,6 +20,13 @@ fn cell_to_texture_color(cell: char, tx: u32, ty:u32)-> u32{
     return WALL1.get_pixel_color(tx,ty)
 }
 
+fn detect_collision(player: &Player, enemy_pos: &Vec2, threshold: f32) -> bool {
+    let distance = ((player.pos.x - enemy_pos.x).powi(2) + (player.pos.y - enemy_pos.y).powi(2)).sqrt();
+    println!("Jugador en: ({}, {}), Enemigo en: ({}, {}), Distancia: {}", 
+        player.pos.x, player.pos.y, enemy_pos.x, enemy_pos.y, distance);
+    distance < threshold
+}
+
 
 fn render_enemy(framebuffer: &mut Framebuffer, player: &Player, pos: &Vec2) {
     let sprite_a = (pos.y - player.pos.y).atan2(pos.x - player.pos.x); // Ángulo del enemigo relativo al jugador
@@ -68,13 +75,18 @@ fn render_enemy(framebuffer: &mut Framebuffer, player: &Player, pos: &Vec2) {
 
 
 pub fn render_enemies(framebuffer: &mut Framebuffer, player: &Player){
-    let enemies = vec![
+    let mut enemies = vec![
         Vec2::new(280.0,280.0)
     ];
 
-    for e in &enemies{ 
-        render_enemy(framebuffer, &player, e);
-    }
+    enemies.retain(|enemy_pos| {
+        if detect_collision(player, enemy_pos, 100.0) {
+            false // Si hay colisión, el enemigo se elimina
+        } else {
+            render_enemy(framebuffer, player, enemy_pos);
+            true // Si no hay colisión, el enemigo se conserva
+        }
+    });
 }
 
 // recibe donde va a estar, el tamaño de los cuadrados y para ponerle diferentes colores una celda

@@ -33,8 +33,15 @@ impl Player {
             if let Some(prev_x) = self.prev_mouse_x {
                 let delta_x = mouse_x as f32 - prev_x;
                 self.a += delta_x * 0.005;
+    
+                // Normalizar el ángulo del jugador
+                self.a = (self.a + 2.0 * PI) % (2.0 * PI);
+    
+                // Asegurarse de que el ángulo esté en el rango [-PI, PI]
+                if self.a > PI {
+                    self.a -= 2.0 * PI;
+                }
             }
-
             self.prev_mouse_x = Some(mouse_x);
         }
     }

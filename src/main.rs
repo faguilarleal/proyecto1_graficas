@@ -55,6 +55,13 @@ fn main() {
         prev_mouse_x: None, 
     };
 
+    let mut player2 = Player{
+        pos: Vec2::new(20.0, 20.0),
+        a: PI/3.0,
+        fov: PI/3.0, 
+        prev_mouse_x: None, 
+    };
+
     let mut mode = "3D";
     
     let mut last_time = Instant::now();
@@ -72,28 +79,29 @@ fn main() {
             break;
         }
 
-        if window.is_key_down(Key::M){
-            mode = if mode == "2D" {"3D"} else {"2D"};
-        }
+        // if window.is_key_down(Key::M){
+        //     mode = if mode == "2D" {"3D"} else {"2D"};
+        // }
 
         procces(&mut window, &mut player1, &maze , 100); // para los controles y movimiento 
+        // procces(&mut window, &mut player2, &maze , 20); // para los controles y movimiento 
 
 
         framebuffer.clear();
 
-        if mode == "2D"{
-            audio_player.stop();
-            render2D(&mut framebuffer, &mut player1);
-        }
-        else{
+        // if mode == "2D"{
+        //     audio_player.stop();
+        //     render2D(&mut framebuffer, &mut player1);
+        // }
+        // else{
              // Incrementar el contador de frames
-            if !audio_player.isplaying {
-                audio_player = AudioPlayer::new(audio_file_path);
-            }
-            audio_player.play();
-            render3D(&mut framebuffer, &mut player1);
-             
-        }
+            // if !audio_player.isplaying {
+            //     audio_player = AudioPlayer::new(audio_file_path);
+            // }
+            // audio_player.play();
+        render3D(&mut framebuffer, &mut player1, &mut player2);
+         
+        // }
             
         frame_count += 1;
         

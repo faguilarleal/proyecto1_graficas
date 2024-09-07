@@ -13,9 +13,10 @@ mod caster;
 mod texture; 
 mod sound;
 mod render; 
+mod enemy;
 
 use render::{render2D, render3D};
-
+use enemy::Enemy;
 use sound::AudioPlayer;
 use std::time::{Duration, Instant};
 use framebuffer::Framebuffer;

@@ -49,7 +49,7 @@ impl Player {
 
 
 pub fn procces(window: &Window, player: &mut Player, maze: &Vec<Vec<char>>, block_size: usize) {
-    const MOVE_SPEED: f32 = 15.0;
+    const MOVE_SPEED: f32 = 25.0;
     const ROTATION_SPEED: f32 = PI/ 30.0;
 
 

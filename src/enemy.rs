@@ -13,4 +13,9 @@ impl Enemy {
             collected: false,
         }
     }
+    // Función para cambiar el estado de collected a true
+    pub fn collect(&mut self) {
+        self.collected = true;
+    }
 }
+

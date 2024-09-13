@@ -22,7 +22,7 @@ impl Texture {
 
     pub fn get_pixel_color(&self, x: u32, y: u32) -> u32 {
         if x > self.width || y > self.height {
-            0xFF00FF
+            0xFFFFFF
         } else {
             let pixel = self.image.get_pixel(x, y).to_rgb();
             let r = pixel[0];
@@ -34,7 +34,7 @@ impl Texture {
 
     pub fn get_pixel(&self, x: u32, y: u32) -> u32{
         if x>= self.width || y >= self.height { 
-            return 0xFF0000
+            return 0xFFFFFF
         }
         self.color_array[x as usize][y as usize]
     }
